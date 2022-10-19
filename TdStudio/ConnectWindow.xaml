@@ -1,0 +1,86 @@
+<ui:UiWindow x:Class="TdStudio.ConnectWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:local="clr-namespace:TdStudio"
+             mc:Ignorable="d"
+             Background="{ui:ThemeResource ApplicationBackgroundBrush}"
+             ExtendsContentIntoTitleBar="True"
+             WindowBackdropType="Mica"
+             MinWidth="900"
+             MinHeight="620"
+             WindowCornerPreference="Round"
+             WindowStartupLocation="CenterScreen">
+    <ui:UiWindow.Resources>
+        <local:TaosConnectionStringValidateConverter x:Key="TaosConnectionStringValidateConverter" />
+    </ui:UiWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ui:TitleBar Title="TdStudio" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <ui:TitleBar.Tray>
+                <ui:NotifyIcon
+                    FocusOnLeftClick="True"
+                    MenuOnRightClick="True"
+                    TooltipText="TdStudio">
+                </ui:NotifyIcon>
+            </ui:TitleBar.Tray>
+        </ui:TitleBar>
+
+        <ui:CardControl Grid.Row="1" Grid.Column="0"
+                        Width="260"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Top"
+                        Margin="5,5">
+            <ui:CardControl.Header>
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="History16" Foreground="White" FontWeight="Bold" HorizontalAlignment="Left" />
+                    <TextBlock Margin="5,0" FontSize="14" FontWeight="Bold">Recents</TextBlock>
+                </StackPanel>
+            </ui:CardControl.Header>
+        </ui:CardControl>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="15,5">
+            <TextBlock FontSize="20">New Connection</TextBlock>
+            <ui:Card VerticalAlignment="Stretch" VerticalContentAlignment="Top" Margin="0,20">
+                <StackPanel>
+                    <TextBlock>Paste your connection string</TextBlock>
+                    <ui:TextBox x:Name="TxtConnection" Margin="0,10"
+                                PlaceholderText="e.g.http://127.0.0.1:6041?database=database&amp;username=root&amp;password=taosdata" />
+                    <Border BorderBrush="#09804c" BorderThickness="2" Padding="5"
+                            Visibility="{Binding ElementName=ConnectMessage,Path=Visibility}">
+                        <TextBlock x:Name="ConnectMessage" Foreground="#09804c" Visibility="Collapsed" />
+                    </Border>
+                    <ui:Button x:Name="ConnectButton" HorizontalAlignment="Right"
+                               Background="#09804c"
+                               Width="86"
+                               Height="36"
+                               Margin="0,10"
+                               Cursor="Hand"
+                               Content="Connect"
+                               IsEnabled="{Binding ElementName=TxtConnection,Path=Text,Converter={StaticResource TaosConnectionStringValidateConverter}}"
+                               Click="ConnectButton_OnClick">
+                    </ui:Button>
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+
+        <ui:LoadingScreen x:Name="Loading" Grid.Row="0"
+                          Grid.RowSpan="2"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="2"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Visibility="Hidden"
+                          Background="Transparent" />
+    </Grid>
+</ui:UiWindow>
