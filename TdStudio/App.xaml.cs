@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using TdStudio.Taos;
 
 namespace TdStudio
 {
@@ -13,5 +14,6 @@ namespace TdStudio
     /// </summary>
     public partial class App : Application
     {
+        public static TaosConnector? TaosConnector { get; set; }
     }
 }

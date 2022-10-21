@@ -18,15 +18,16 @@ public partial class ConnectWindow : UiWindow
         ConnectMessage.Visibility = Visibility.Collapsed;
         Loading.Visibility = Visibility.Visible;
 
-        var taosConnector = new TaosConnector(TxtConnection.Text);
+        App.TaosConnector = new TaosConnector(TxtConnection.Text);
 
         try
         {
-            await taosConnector.ToDataTableAsync(@"show stables");
+            await App.TaosConnector.ToDataTableAsync(@"show stables");
+            Hide();
+            new MainWindow().Show();
         }
         catch
         {
-            ConnectMessage.Text = $"connect ECONNREFUSED: {taosConnector.Host}:{taosConnector.Port}";
             ConnectMessage.Visibility = Visibility.Visible;
         }
         finally

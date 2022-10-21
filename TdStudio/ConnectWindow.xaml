@@ -26,15 +26,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ui:TitleBar Title="TdStudio" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-            <ui:TitleBar.Tray>
-                <ui:NotifyIcon
-                    FocusOnLeftClick="True"
-                    MenuOnRightClick="True"
-                    TooltipText="TdStudio">
-                </ui:NotifyIcon>
-            </ui:TitleBar.Tray>
-        </ui:TitleBar>
+        <ui:TitleBar Title="TdStudio" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
 
         <ui:CardControl Grid.Row="1" Grid.Column="0"
                         Width="260"
@@ -55,11 +47,12 @@
                 <StackPanel>
                     <TextBlock>Paste your connection string</TextBlock>
                     <ui:TextBox x:Name="TxtConnection" Margin="0,10"
-                                PlaceholderText="e.g.http://127.0.0.1:6041?database=database&amp;username=root&amp;password=taosdata" />
-                    <Border BorderBrush="#09804c" BorderThickness="2" Padding="5"
-                            Visibility="{Binding ElementName=ConnectMessage,Path=Visibility}">
-                        <TextBlock x:Name="ConnectMessage" Foreground="#09804c" Visibility="Collapsed" />
-                    </Border>
+                                PlaceholderText="e.g.http://127.0.0.1:6041?database=database&amp;username=root&amp;password=taosdata"
+                                Text="http://192.168.5.247:6041?database=mop_pm_stg&amp;username=root&amp;password=taosdata" />
+                    <TextBlock x:Name="ConnectMessage"
+                               Text="connect ECONNREFUSED"
+                               Foreground="#09804c"
+                               Visibility="Collapsed" />
                     <ui:Button x:Name="ConnectButton" HorizontalAlignment="Right"
                                Background="#09804c"
                                Width="86"

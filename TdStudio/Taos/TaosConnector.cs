@@ -13,6 +13,9 @@ namespace TdStudio.Taos;
 
 public sealed class TaosConnector
 {
+    private readonly string _host;
+    private readonly ushort _port;
+    private readonly string _dbName;
     private readonly string _userName;
     private readonly string _password;
 
@@ -35,16 +38,12 @@ public sealed class TaosConnector
     {
         var uri = new Uri(connectionString);
         var query = HttpUtility.ParseQueryString(uri.Query);
-        Host = uri.Host;
-        Port = (ushort)uri.Port;
+        _host = uri.Host;
+        _port = (ushort)uri.Port;
         _userName = query.Get("username")!;
         _password = query.Get("password")!;
-        DbName = query.Get("database")!;
+        _dbName = query.Get("database")!;
     }
-
-    public string Host { get; }
-    public ushort Port { get; }
-    public string DbName { get; }
 
     public async Task<List<T>?> ToListAsync<T>(string sql)
     {
@@ -52,7 +51,7 @@ public sealed class TaosConnector
         try
         {
             var res = await client.SetBasicAuthentication(_userName, _password)
-                .PostAsync($"http://{Host}:{Port}/rest/sql/{DbName}")
+                .PostAsync($"http://{_host}:{_port}/rest/sql/{_dbName}")
                 .WithBody(new StringContent(sql))
                 .As<TaosRestReponse>();
 
@@ -76,7 +75,7 @@ public sealed class TaosConnector
         try
         {
             var res = await client.SetBasicAuthentication(_userName, _password)
-                .PostAsync($"http://{Host}:{Port}/rest/sql/{DbName}")
+                .PostAsync($"http://{_host}:{_port}/rest/sql/{_dbName}")
                 .WithBody(new StringContent(sql))
                 .As<TaosRestReponse>();
 
@@ -100,7 +99,7 @@ public sealed class TaosConnector
         try
         {
             var res = await client.SetBasicAuthentication(_userName, _password)
-                .PostAsync($"http://{Host}:{Port}/rest/sql/{DbName}")
+                .PostAsync($"http://{_host}:{_port}/rest/sql/{_dbName}")
                 .WithBody(new StringContent(sql))
                 .As<TaosRestReponse>();
 
@@ -132,7 +131,7 @@ public sealed class TaosConnector
         try
         {
             var res = await client.SetBasicAuthentication(_userName, _password)
-                .PostAsync($"http://{Host}:{Port}/rest/sql/{DbName}")
+                .PostAsync($"http://{_host}:{_port}/rest/sql/{_dbName}")
                 .WithBody(new StringContent(sql))
                 .As<TaosRestReponse>();
 
