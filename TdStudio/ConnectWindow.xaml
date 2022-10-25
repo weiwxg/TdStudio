@@ -48,8 +48,7 @@
                 <StackPanel>
                     <TextBlock>Paste your connection string</TextBlock>
                     <ui:TextBox x:Name="TxtConnection" Margin="0,10"
-                                PlaceholderText="e.g.http://127.0.0.1:6041?database=database&amp;username=root&amp;password=taosdata"
-                                Text="http://192.168.5.247:6041?database=mop_pm_stg&amp;username=root&amp;password=taosdata" />
+                                PlaceholderText="e.g.http://127.0.0.1:6041?database=database&amp;username=root&amp;password=taosdata" />
                     <TextBlock x:Name="ConnectMessage"
                                Text="connect ECONNREFUSED"
                                Foreground="#09804c"
