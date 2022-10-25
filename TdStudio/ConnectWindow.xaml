@@ -54,7 +54,6 @@
                                Foreground="#09804c"
                                Visibility="Collapsed" />
                     <ui:Button x:Name="ConnectButton" HorizontalAlignment="Right"
-                               Background="#09804c"
                                Width="86"
                                Height="36"
                                Margin="0,10"
