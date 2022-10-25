@@ -6,7 +6,7 @@ namespace TdStudio.Taos;
 public sealed class TaosRestReponse
 {
     public const string DefaultResponseStatus = "succ";
-    public static int DefaultResponseCode = 0;
+    public const int DefaultResponseCode = 0;
 
 #nullable disable
     [JsonProperty("status")]
@@ -14,6 +14,9 @@ public sealed class TaosRestReponse
 
     [JsonProperty("code")]
     public int Code { get; set; }
+
+    [JsonProperty("desc")]
+    public string Desc { get; set; }
 
     [JsonProperty("column_meta")]
     public ArrayList[] ColumnMeta { get; set; }

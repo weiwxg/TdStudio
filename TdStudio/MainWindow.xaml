@@ -33,7 +33,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ui:TitleBar Title="TdStudio" Grid.Row="0" />
+        <ui:TitleBar Grid.Row="0" Icon="Assets/logo.ico" />
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300" MinWidth="100" MaxWidth="600" />
@@ -41,27 +41,48 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!--STABLE 列表-->
-            <ListView x:Name="LvStables" Grid.Column="0"
-                      ItemsSource="{Binding Stables}"
-                      VerticalContentAlignment="Top"
-                      ui:DynamicScrollViewer.VerticalScrollBarVisibility="Auto"
-                      ui:DynamicScrollViewer.CanContentScroll="False"
-                      SelectionMode="Single">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="Focusable" Value="False" />
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.ItemTemplate>
-                    <DataTemplate DataType="{x:Type localm:Stable}">
-                        <StackPanel Orientation="Horizontal" Margin="10,0">
-                            <ui:SymbolIcon Symbol="Table16" Margin="0,0,5,0" />
-                            <TextBlock Text="{Binding Name}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <StackPanel Grid.Column="0" x:Name="DbTitle">
+                <DockPanel HorizontalAlignment="Stretch" LastChildFill="False" Margin="10,0,10,10">
+                    <ui:SymbolIcon Symbol="DatabasePlugConnected20" Margin="0,0,5,0" />
+                    <TextBlock DockPanel.Dock="Left" Text="{Binding DbName}" />
+                    <ui:Button DockPanel.Dock="Right"
+                               x:Name="DbReloadButton"
+                               Padding="0,0,0,0"
+                               BorderThickness="0" Visibility="Hidden">
+                        <ui:SymbolIcon Symbol="ArrowSync12" />
+                        <ui:Button.Style>
+                            <Style TargetType="ui:Button">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ui:Button.Style>
+                    </ui:Button>
+                </DockPanel>
+
+                <!--STABLE list-->
+                <ListView x:Name="LvStables"
+                          ItemsSource="{Binding Stables}"
+                          VerticalContentAlignment="Top"
+                          SelectionMode="Single">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable" Value="False" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type localm:Stable}">
+                            <StackPanel Orientation="Horizontal" Margin="10,0">
+                                <ui:SymbolIcon Symbol="Table16" Margin="0,0,5,0" Foreground="#c2bb0f" />
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+
 
             <GridSplitter Grid.Column="1" Width="1"
                           HorizontalAlignment="Center" VerticalAlignment="Stretch"
@@ -85,9 +106,9 @@
                                            Icon="Play16"
                                            IconForeground="#09804c"
                                            Margin="0,0,5,5"
-                                           Click="BtnRun_OnClick">
-                                    Run
-                                </ui:Button>
+                                           Cursor="Hand"
+                                           Click="BtnRun_OnClick"
+                                           Content="Run" />
                                 <avalon:TextEditor x:Name="QueryBox"
                                                    DockPanel.Dock="Top"
                                                    ShowLineNumbers="True"
@@ -105,20 +126,61 @@
                               HorizontalAlignment="Stretch"
                               Background="{ui:ThemeResource ControlFillColorDefaultBrush}" />
 
-                <!--结果数据-->
-                <ui:DataGrid x:Name="DataGrid"
-                             AutoGenerateColumns="True"
-                             Grid.Row="2"
-                             ItemsSource="{Binding Data}"
-                             Background="{ui:ThemeResource ApplicationBackgroundBrush}"
-                             FontSize="13"
-                             BorderThickness="0"
-                             CanUserAddRows="False"
-                             CanUserDeleteRows="False"
-                             CanUserReorderColumns="True"
-                             Visibility="{Binding DataGridVisibility}"
-                             AutoGeneratingColumn="DataGrid_OnAutoGeneratingColumn">
-                </ui:DataGrid>
+                <DataGrid x:Name="DataGrid"
+                          Grid.Row="2"
+                          AutoGenerateColumns="True"
+                          ItemsSource="{Binding Data}"
+                          Background="{ui:ThemeResource ApplicationBackgroundBrush}"
+                          FontSize="12"
+                          FontWeight="Normal"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          CanUserSortColumns="False"
+                          IsReadOnly="True"
+                          SelectionUnit="CellOrRowHeader"
+                          AutoGeneratingColumn="DataGrid_OnAutoGeneratingColumn">
+                    <!--hidden when without any items-->
+                    <DataGrid.Style>
+                        <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource {x:Type DataGrid}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=DataGrid,Path=Items.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Style>
+                    <!--row style on mouse over-->
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#161616" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+                <!--query exception tip-->
+                <ui:Card x:Name="ErrorMessageTip" Grid.Row="2" MaxWidth="600" BorderBrush="#09804c"
+                         Foreground="#09804c">
+                    <ui:Card.Style>
+                        <Style TargetType="{x:Type ui:Card}"
+                               BasedOn="{StaticResource {x:Type ui:Card}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=ErrorMessage.Length}" Value="0">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ui:Card.Style>
+                    <StackPanel>
+                        <TextBlock Margin="0,0,0,10" FontWeight="Bold">
+                            <ui:SymbolIcon Symbol="ErrorCircle12" Foreground="#09804c" Margin="0,0,5,0" />
+                            There was a problem
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap" FontSize="13" Text="{Binding ErrorMessage}" />
+                    </StackPanel>
+                </ui:Card>
             </Grid>
         </Grid>
     </Grid>

@@ -11,15 +11,22 @@ namespace TdStudio.ViewModels;
 public sealed class MainViewModel : INotifyPropertyChanged
 {
 #nullable disable
+    private string _dbName;
     private ObservableCollection<Stable> _stables;
     private DataTable _data;
-    private Visibility _dataGridVisibility;
+    private string _errorMessage;
 
     public MainViewModel()
     {
         _stables = new ObservableCollection<Stable>();
         _data = null;
-        _dataGridVisibility = Visibility.Hidden;
+        _errorMessage = string.Empty;
+    }
+
+    public string DbName
+    {
+        get => _dbName;
+        set => SetField(ref _dbName, value);
     }
 
     public ObservableCollection<Stable> Stables
@@ -31,16 +38,13 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public DataTable Data
     {
         get => _data;
-        set
-        {
-            SetField(ref _data, value);
-            DataGridVisibility = value != null && value.Rows.Count > 0 ? Visibility.Visible : Visibility.Hidden;
-        }
+        set => SetField(ref _data, value);
     }
 
-    private Visibility DataGridVisibility
+    public string ErrorMessage
     {
-        set => SetField(ref _dataGridVisibility, value);
+        get => _errorMessage;
+        set => SetField(ref _errorMessage, value);
     }
 
 #nullable enable

@@ -5,7 +5,18 @@
         <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
+        <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\logo.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Assets\*">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="AvalonEdit" Version="6.1.3.50" />

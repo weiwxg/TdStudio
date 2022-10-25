@@ -15,7 +15,7 @@ public sealed class TaosConnector
 {
     private readonly string _host;
     private readonly ushort _port;
-    private readonly string _dbName;
+    public string DbName { get; }
     private readonly string _userName;
     private readonly string _password;
 
@@ -42,7 +42,7 @@ public sealed class TaosConnector
         _port = (ushort)uri.Port;
         _userName = query.Get("username")!;
         _password = query.Get("password")!;
-        _dbName = query.Get("database")!;
+        DbName = query.Get("database")!;
     }
 
     public async Task<List<T>?> ToListAsync<T>(string sql)
@@ -51,11 +51,11 @@ public sealed class TaosConnector
         try
         {
             var res = await client.SetBasicAuthentication(_userName, _password)
-                .PostAsync($"http://{_host}:{_port}/rest/sql/{_dbName}")
+                .PostAsync($"http://{_host}:{_port}/rest/sql/{DbName}")
                 .WithBody(new StringContent(sql))
                 .As<TaosRestReponse>();
 
-            Check(res, sql);
+            Check(res);
 
             return MapTo<List<T>>(res.ColumnMeta, res.Data);
         }
@@ -75,11 +75,11 @@ public sealed class TaosConnector
         try
         {
             var res = await client.SetBasicAuthentication(_userName, _password)
-                .PostAsync($"http://{_host}:{_port}/rest/sql/{_dbName}")
+                .PostAsync($"http://{_host}:{_port}/rest/sql/{DbName}")
                 .WithBody(new StringContent(sql))
                 .As<TaosRestReponse>();
 
-            Check(res, sql);
+            Check(res);
 
             return res.Data.Length == 0 ? 0L : (long)res.Data[0][0]!;
         }
@@ -99,11 +99,11 @@ public sealed class TaosConnector
         try
         {
             var res = await client.SetBasicAuthentication(_userName, _password)
-                .PostAsync($"http://{_host}:{_port}/rest/sql/{_dbName}")
+                .PostAsync($"http://{_host}:{_port}/rest/sql/{DbName}")
                 .WithBody(new StringContent(sql))
                 .As<TaosRestReponse>();
 
-            Check(res, sql);
+            Check(res);
 
             var dt = new DataTable();
             dt.Columns.AddRange(res.ColumnMeta
@@ -131,11 +131,11 @@ public sealed class TaosConnector
         try
         {
             var res = await client.SetBasicAuthentication(_userName, _password)
-                .PostAsync($"http://{_host}:{_port}/rest/sql/{_dbName}")
+                .PostAsync($"http://{_host}:{_port}/rest/sql/{DbName}")
                 .WithBody(new StringContent(sql))
                 .As<TaosRestReponse>();
 
-            Check(res, sql);
+            Check(res);
         }
         catch (ApiException ex)
         {
@@ -166,12 +166,12 @@ public sealed class TaosConnector
         return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(dicList));
     }
 
-    private static void Check(TaosRestReponse response, string sql)
+    private static void Check(TaosRestReponse response)
     {
         if (response.Status != TaosRestReponse.DefaultResponseStatus &&
             response.Code != TaosRestReponse.DefaultResponseCode)
         {
-            throw new TaosRestRuquestException($"Taos rest request failed with sql: {sql}");
+            throw new TaosRestRuquestException(response.Desc);
         }
     }
 }

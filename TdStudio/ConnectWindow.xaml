@@ -26,7 +26,8 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ui:TitleBar Title="TdStudio" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
+        <ui:TitleBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Icon="Assets/logo.ico">
+        </ui:TitleBar>
 
         <ui:CardControl Grid.Row="1" Grid.Column="0"
                         Width="260"
